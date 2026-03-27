@@ -1,0 +1,83 @@
+﻿@using Presentation.Models.ViewModels.GenericPaginationVM
+@model PaginationVM<DetailCategoryVM>
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-white"> 📚 Library </h2>
+        <a asp-controller="Category" asp-action="Create" class="btn btn-success shadow-sm">
+            📗 Create New Category
+        </a>
+        <a asp-controller="Book" asp-action="Index" class="btn btn-success shadow-sm">
+            📗 Books
+        </a>
+    </div>
+
+    @if (!Model.Items.Any())
+    {
+        <div class="alert alert-info text-center">
+            No category found. Click "Create New Category" to get started!
+        </div>
+    }
+    else
+    {
+        <table class="table table-hover table-bordered shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>@item.CategoryName</td>
+                        <td class="text-center">
+                            <a asp-controller="Category" asp-action="Update" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-1">
+                                ✏️ Edit
+                            </a>
+                            <a asp-controller="Category" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-info text-white me-1">
+                                🔍 Details
+                            </a>
+                            <a asp-controller="Category" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                🗑️ Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@(Model.PageNumber - 1)"
+                           asp-route-pageSize="@Model.PageSize">
+                        Previous
+                    </a>
+                </li>
+                @for (int i = 1; i < Model.TotalPage; i++)
+                {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a class="page-link"
+                               asp-action="Index"
+                               asp-route-pageNumber="@i"
+                               asp-route-pageSize="@Model.PageSize">
+                            @i
+                        </a>
+                    </li>
+                }
+                <li class="page-item @(Model.PageNumber == Model.TotalPage ? "disabled" : "")">
+                    <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@(Model.PageNumber + 1)"
+                           asp-route-pageSize="@Model.PageSize">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>
